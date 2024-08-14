@@ -7,15 +7,6 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import connectDB from "./database/db.js";
 
-const app = express();
-app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.ENDPOINT_URL,
-    credentials: true,
-  })
-);
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -25,6 +16,15 @@ if (process.env.NODE_ENV === "production") {
 } else if (process.env.NODE_ENV === "development") {
   dotenv.config({ path: path.join(__dirname, "./.env.development") });
 }
+
+const app = express();
+app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.ENDPOINT_URL,
+    credentials: true,
+  })
+);
 
 // routes 파일들을 모두 읽어서 각각을 Express 앱에 등록
 const routesPath = path.join(__dirname, "/routes"); // routes 파일들이 있는 디렉토리 경로
@@ -42,7 +42,7 @@ for (const file of routeFiles) {
 }
 
 // 데이터베이스 연결
-await connectDB();
+// await connectDB();
 
 app.get("/", (req, res) => {
   res.send(`<div>

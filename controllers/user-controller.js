@@ -1,4 +1,5 @@
 import connectDB from "../database/db.js";
+import { getAllMember } from "../models/user-db.js";
 import User from "../schemas/user-schema.js";
 
 // body를 보내는 애들
@@ -12,8 +13,11 @@ export const getUser = async (req, res) => {
   try {
     const { user_id } = req.params;
 
-    await connectDB();
-    const user = await User.findOne({ id: user_id });
+    const user = await getAllMember(user_id);
+    console.log(user);
+
+    // await connectDB();
+    // const user = await User.findOne({ id: user_id });
 
     if (!user) {
       res.status(404).json({
