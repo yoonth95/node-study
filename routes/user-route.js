@@ -9,4 +9,7 @@ router.put("/user/updateUser", userController.updateUser); // 유저 해당 전�
 router.patch("/user/updateUser", userController.updateUser); // 유저 해당 정보 일부 수정
 router.delete("/user/deleteUser/:user_id", userController.deleteUser); // 유저 개별 삭제
 
+router.post("/user/fileUpload", userController.fileUpload); // 파일 업로드
+router.post("/user/fileUploadMany", userController.fileUploadMany); // 여러 파일 업로드
+
 export default router;

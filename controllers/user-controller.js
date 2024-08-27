@@ -1,5 +1,5 @@
 import connectDB from "../database/db.js";
-import { getAllMember } from "../models/user-db.js";
+import { uploadImage, uploadImageMany } from "../middleware/imageUpload.js";
 import User from "../schemas/user-schema.js";
 
 // body를 보내는 애들
@@ -13,11 +13,9 @@ export const getUser = async (req, res) => {
   try {
     const { user_id } = req.params;
 
-    const user = await getAllMember(user_id);
+    await connectDB();
+    const user = await User.findOne({ id: user_id }); // 몽고디비 방법
     console.log(user);
-
-    // await connectDB();
-    // const user = await User.findOne({ id: user_id });
 
     if (!user) {
       res.status(404).json({
@@ -126,3 +124,32 @@ export const deleteUser = async (req, res) => {
     session.endSession();
   }
 };
+
+// 한개 이미지 업로드
+export const fileUpload = [
+  uploadImage.single("upImage"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        res.status(200).json({ ok: false, message: "이미지를 넣어주세요." });
+      }
+      res.status(200).json({ ok: true, message: "성공" });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ ok: false, message: err.message });
+    }
+  },
+];
+
+// 여러개 이미지 업로드
+export const fileUploadMany = [
+  uploadImageMany([{ name: "upImage", maxCount: 2 }]),
+  async (req, res) => {
+    try {
+      res.status(200).json({ ok: true, message: "성공" });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ ok: false, message: err.message });
+    }
+  },
+];
